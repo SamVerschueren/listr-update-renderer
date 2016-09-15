@@ -1,6 +1,6 @@
 {
   "name": "listr-update-renderer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Listr update renderer",
   "license": "MIT",
   "repository": "SamVerschueren/listr-update-renderer",
