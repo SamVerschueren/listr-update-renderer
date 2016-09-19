@@ -4,6 +4,7 @@ const chalk = require('chalk');
 const figures = require('figures');
 const indentString = require('indent-string');
 const cliTruncate = require('cli-truncate');
+const stripAnsi = require('strip-ansi');
 const utils = require('./lib/utils');
 
 const renderHelper = (tasks, options, level) => {
@@ -20,7 +21,7 @@ const renderHelper = (tasks, options, level) => {
 			const lastLine = task.output.trim().split('\n').filter(Boolean).pop();
 
 			if (lastLine) {
-				const out = indentString(`${figures.arrowRight} ${lastLine.trim()}`, level, '  ');
+				const out = indentString(`${figures.arrowRight} ${stripAnsi(lastLine.trim())}`, level, '  ');
 				output.push(`   ${chalk.gray(cliTruncate(out, process.stdout.columns - 3))}`);
 			}
 		}
