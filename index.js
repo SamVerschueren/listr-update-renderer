@@ -15,7 +15,7 @@ const renderHelper = (tasks, options, level) => {
 	for (const task of tasks) {
 		const skipped = task.isSkipped() ? ` ${chalk.dim('[skipped]')}` : '';
 
-		output.push(indentString(` ${utils.getSymbol(task, options)}${task.title}${skipped}`, level, '  '));
+		output.push(indentString(` ${utils.getSymbol(task, options)} ${task.title}${skipped}`, level, '  '));
 
 		if ((task.isPending() || task.isSkipped()) && task.output) {
 			const lastLine = task.output.trim().split('\n').filter(Boolean).pop();
