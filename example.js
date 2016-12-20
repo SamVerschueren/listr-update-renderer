@@ -34,6 +34,10 @@ const tasks = new Listr([
 									return delay(500);
 								})
 								.then(() => {
+									observer.next('');
+									return delay(500);
+								})
+								.then(() => {
 									observer.complete();
 								});
 						});

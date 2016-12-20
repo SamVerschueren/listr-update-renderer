@@ -23,7 +23,7 @@ const renderHelper = (tasks, options, level) => {
 			if (typeof data === 'string') {
 				data = stripAnsi(data.trim().split('\n').filter(Boolean).pop());
 
-				if (data.length === 0) {
+				if (data === '') {
 					data = undefined;
 				}
 			}
