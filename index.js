@@ -13,29 +13,31 @@ const renderHelper = (tasks, options, level) => {
 	let output = [];
 
 	for (const task of tasks) {
-		const skipped = task.isSkipped() ? ` ${chalk.dim('[skipped]')}` : '';
+		if (task.isEnabled()) {
+			const skipped = task.isSkipped() ? ` ${chalk.dim('[skipped]')}` : '';
 
-		output.push(indentString(` ${utils.getSymbol(task, options)} ${task.title}${skipped}`, level, '  '));
+			output.push(indentString(` ${utils.getSymbol(task, options)} ${task.title}${skipped}`, level, '  '));
 
-		if ((task.isPending() || task.isSkipped() || task.hasFailed()) && utils.isDefined(task.output)) {
-			let data = task.output;
+			if ((task.isPending() || task.isSkipped() || task.hasFailed()) && utils.isDefined(task.output)) {
+				let data = task.output;
 
-			if (typeof data === 'string') {
-				data = stripAnsi(data.trim().split('\n').filter(Boolean).pop());
+				if (typeof data === 'string') {
+					data = stripAnsi(data.trim().split('\n').filter(Boolean).pop());
 
-				if (data === '') {
-					data = undefined;
+					if (data === '') {
+						data = undefined;
+					}
+				}
+
+				if (utils.isDefined(data)) {
+					const out = indentString(`${figures.arrowRight} ${data}`, level, '  ');
+					output.push(`   ${chalk.gray(cliTruncate(out, process.stdout.columns - 3))}`);
 				}
 			}
 
-			if (utils.isDefined(data)) {
-				const out = indentString(`${figures.arrowRight} ${data}`, level, '  ');
-				output.push(`   ${chalk.gray(cliTruncate(out, process.stdout.columns - 3))}`);
+			if ((task.isPending() || task.hasFailed() || options.collapse === false) && (task.hasFailed() || options.showSubtasks !== false) && task.subtasks.length > 0) {
+				output = output.concat(renderHelper(task.subtasks, options, level + 1));
 			}
-		}
-
-		if ((task.isPending() || task.hasFailed() || options.collapse === false) && (task.hasFailed() || options.showSubtasks !== false) && task.subtasks.length > 0) {
-			output = output.concat(renderHelper(task.subtasks, options, level + 1));
 		}
 	}
 
