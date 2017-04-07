@@ -52,7 +52,7 @@ Default: `true`
 
 Set to `false` if you don't want subtasks to be hidden after the main task succeed.
 
-### clear
+### clearOutput
 
 Type: `boolean`<br>
 Default: `false`

@@ -55,7 +55,7 @@ class UpdateRenderer {
 		this._options = Object.assign({
 			showSubtasks: true,
 			collapse: true,
-			clear: false
+			clearOutput: false
 		}, options);
 	}
 
@@ -78,7 +78,7 @@ class UpdateRenderer {
 
 		render(this._tasks, this._options);
 
-		if (this._options.clear && err === undefined) {
+		if (this._options.clearOutput && err === undefined) {
 			logUpdate.clear();
 		} else {
 			logUpdate.done();
