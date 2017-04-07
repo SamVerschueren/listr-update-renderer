@@ -54,7 +54,8 @@ class UpdateRenderer {
 		this._tasks = tasks;
 		this._options = Object.assign({
 			showSubtasks: true,
-			collapse: true
+			collapse: true,
+			clear: false
 		}, options);
 	}
 
@@ -69,14 +70,19 @@ class UpdateRenderer {
 		}, 100);
 	}
 
-	end() {
+	end(err) {
 		if (this._id) {
 			clearInterval(this._id);
 			this._id = undefined;
 		}
 
 		render(this._tasks, this._options);
-		logUpdate.done();
+
+		if (this._options.clear && err === undefined) {
+			logUpdate.clear();
+		} else {
+			logUpdate.done();
+		}
 	}
 }
 

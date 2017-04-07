@@ -52,6 +52,13 @@ Default: `true`
 
 Set to `false` if you don't want subtasks to be hidden after the main task succeed.
 
+### clear
+
+Type: `boolean`<br>
+Default: `false`
+
+Clear the output when all the tasks are executed succesfully.
+
 
 ## Related
 
