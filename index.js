@@ -1,6 +1,6 @@
 'use strict';
 const logUpdate = require('log-update');
-const chalk = require('chalk');
+const colors = require('ansi-colors');
 const figures = require('figures');
 const indentString = require('indent-string');
 const cliTruncate = require('cli-truncate');
@@ -14,7 +14,7 @@ const renderHelper = (tasks, options, level) => {
 
 	for (const task of tasks) {
 		if (task.isEnabled()) {
-			const skipped = task.isSkipped() ? ` ${chalk.dim('[skipped]')}` : '';
+			const skipped = task.isSkipped() ? ` ${colors.dim('[skipped]')}` : '';
 
 			output.push(indentString(` ${utils.getSymbol(task, options)} ${task.title}${skipped}`, level, '  '));
 
@@ -31,7 +31,7 @@ const renderHelper = (tasks, options, level) => {
 
 				if (utils.isDefined(data)) {
 					const out = indentString(`${figures.arrowRight} ${data}`, level, '  ');
-					output.push(`   ${chalk.gray(cliTruncate(out, process.stdout.columns - 3))}`);
+					output.push(`   ${colors.gray(cliTruncate(out, process.stdout.columns - 3))}`);
 				}
 			}
 

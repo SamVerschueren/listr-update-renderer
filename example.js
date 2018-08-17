@@ -1,9 +1,11 @@
 'use strict';
 const Observable = require('zen-observable');
-const logSymbols = require('log-symbols');
+const colors = require('ansi-colors');
 const delay = require('delay');
 const Listr = require('listr');
 const renderer = require('./');
+
+const success = colors.green(colors.symbols.check);
 
 const tasks = new Listr([
 	{
@@ -62,7 +64,7 @@ const tasks = new Listr([
 
 				delay(2000)
 					.then(() => {
-						observer.next(`${logSymbols.success} 7 passed`);
+						observer.next(`${success} 7 passed`);
 						return delay(2000);
 					})
 					.then(() => {
