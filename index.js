@@ -18,7 +18,7 @@ const renderHelper = (tasks, options, level) => {
 
 			output.push(indentString(` ${utils.getSymbol(task, options)} ${task.title}${skipped}`, level, '  '));
 
-			if ((task.isPending() || task.isSkipped() || task.hasFailed()) && utils.isDefined(task.output)) {
+			if ((!options.collapse || (task.isPending() || task.isSkipped() || task.hasFailed())) && utils.isDefined(task.output)) {
 				let data = task.output;
 
 				if (typeof data === 'string') {
