@@ -19,19 +19,13 @@ const renderHelper = (tasks, options, level) => {
 			output.push(indentString(` ${utils.getSymbol(task, options)} ${task.title}${skipped}`, level, '  '));
 
 			if ((task.isPending() || task.isSkipped() || task.hasFailed()) && utils.isDefined(task.output)) {
-				let data = task.output;
+				let data = String(task.output).trim().split('\n').map(stripAnsi).filter(Boolean);
 
-				if (typeof data === 'string') {
-					data = stripAnsi(data.trim().split('\n').filter(Boolean).pop());
-
-					if (data === '') {
-						data = undefined;
-					}
-				}
-
-				if (utils.isDefined(data)) {
-					const out = indentString(`${figures.arrowRight} ${data}`, level, '  ');
-					output.push(`   ${chalk.gray(cliTruncate(out, process.stdout.columns - 3))}`);
+				if (data.length) {
+					data.forEach ( datum => {
+						const out = indentString(`${figures.arrowRight} ${datum}`, level, '  ');
+						output.push(`   ${chalk.gray(cliTruncate(out, process.stdout.columns - 3))}`);
+					});
 				}
 			}
 
