@@ -13,32 +13,31 @@ const renderHelper = (tasks, options, level) => {
 	let output = [];
 
 	for (const task of tasks) {
-		if (task.isEnabled()) {
-			const skipped = task.isSkipped() ? ` ${chalk.dim('[skipped]')}` : '';
+		const disabled = !task.isEnabled() ? ` ${chalk.dim('[disabled]')}`: '';
+		const skipped = task.isSkipped() ? ` ${chalk.dim('[skipped]')}` : '';
 
-			const out = indentString(` ${utils.getSymbol(task, options)} ${task.title}${skipped}`, level, '  ');
-			output.push(cliTruncate(out, process.stdout.columns));
+		const out = indentString(` ${utils.getSymbol(task, options)} ${task.title}${disabled}${skipped}`, level, '  ');
+		output.push(cliTruncate(out, process.stdout.columns));
 
-			if ((task.isPending() || task.isSkipped() || task.hasFailed()) && utils.isDefined(task.output)) {
-				let data = task.output;
+		if ((task.isPending() || !task.isEnabled() || task.isSkipped() || task.hasFailed()) && utils.isDefined(task.output)) {
+			let data = task.output;
 
-				if (typeof data === 'string') {
-					data = stripAnsi(data.trim().split('\n').filter(Boolean).pop());
+			if (typeof data === 'string') {
+				data = stripAnsi(data.trim().split('\n').filter(Boolean).pop());
 
-					if (data === '') {
-						data = undefined;
-					}
-				}
-
-				if (utils.isDefined(data)) {
-					const out = indentString(`${figures.arrowRight} ${data}`, level, '  ');
-					output.push(`   ${chalk.gray(cliTruncate(out, process.stdout.columns - 3))}`);
+				if (data === '') {
+					data = undefined;
 				}
 			}
 
-			if ((task.isPending() || task.hasFailed() || options.collapse === false) && (task.hasFailed() || options.showSubtasks !== false) && task.subtasks.length > 0) {
-				output = output.concat(renderHelper(task.subtasks, options, level + 1));
+			if (utils.isDefined(data)) {
+				const out = indentString(`${figures.arrowRight} ${data}`, level, '  ');
+				output.push(`   ${chalk.gray(cliTruncate(out, process.stdout.columns - 3))}`);
 			}
+		}
+
+		if ((task.isPending() || task.hasFailed() || options.collapse === false) && (task.hasFailed() || options.showSubtasks !== false) && task.subtasks.length > 0) {
+			output = output.concat(renderHelper(task.subtasks, options, level + 1));
 		}
 	}
 
