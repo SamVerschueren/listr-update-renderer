@@ -49,7 +49,6 @@ const render = (tasks, options) => {
 };
 
 class UpdateRenderer {
-
 	constructor(tasks, options) {
 		this._tasks = tasks;
 		this._options = Object.assign({
