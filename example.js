@@ -3,7 +3,7 @@ const Observable = require('zen-observable');
 const logSymbols = require('log-symbols');
 const delay = require('delay');
 const Listr = require('listr');
-const renderer = require('./');
+const renderer = require('.');
 
 const tasks = new Listr([
 	{
@@ -81,6 +81,6 @@ const tasks = new Listr([
 	renderer
 });
 
-tasks.run().catch(err => {
-	console.error(err.message);
+tasks.run().catch(error => {
+	console.error(error.message);
 });
