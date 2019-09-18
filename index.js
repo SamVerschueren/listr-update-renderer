@@ -46,10 +46,11 @@ const renderHelper = (tasks, options, level) => {
 
 const shouldSuspendUpdateRenderer = tasks => {
 	for (const task of tasks) {
-		if (task.isEnabled() && task.isPending() && !task.isCompleted()) {
-			return task.shouldSuspendUpdateRenderer();
+		if (task.shouldSuspendUpdateRenderer()) {
+			return true;
 		}
 	}
+	return false;
 };
 
 const render = (tasks, options) => {
