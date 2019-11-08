@@ -15,8 +15,9 @@ const renderHelper = (tasks, options, level) => {
 	for (const task of tasks) {
 		if (task.isEnabled()) {
 			const skipped = task.isSkipped() ? ` ${chalk.dim('[skipped]')}` : '';
+			const timing = options.showTiming && !task.isSkipped() ? ` ${chalk.gray(utils.getTiming(task))}` : '';
 
-			output.push(indentString(` ${utils.getSymbol(task, options)} ${task.title}${skipped}`, level, '  '));
+			output.push(indentString(` ${utils.getSymbol(task, options)} ${task.title}${skipped}${timing}`, level, '  '));
 
 			if ((task.isPending() || task.isSkipped() || task.hasFailed()) && utils.isDefined(task.output)) {
 				let data = task.output;
@@ -48,13 +49,34 @@ const render = (tasks, options) => {
 	logUpdate(renderHelper(tasks, options));
 };
 
+const trackTaskTiming = (tasks, options) => {
+	if (!options.showTiming) {
+		return;
+	}
+
+	for (const task of tasks) {
+		task.subscribe(event => {
+			if (event.type === 'SUBTASKS') {
+				trackTaskTiming(task.subtasks, options);
+			} else if (event.type === 'STATE') {
+				if (task.isPending()) {
+					task._startTime = Date.now();
+				} else if (task.isCompleted() || task.hasFailed()) {
+					task._duration = utils.getTiming(task);
+				}
+			}
+		});
+	}
+};
+
 class UpdateRenderer {
 	constructor(tasks, options) {
 		this._tasks = tasks;
 		this._options = Object.assign({
 			showSubtasks: true,
 			collapse: true,
-			clearOutput: false
+			clearOutput: false,
+			showTiming: true
 		}, options);
 	}
 
@@ -63,6 +85,8 @@ class UpdateRenderer {
 			// Do not render if we are already rendering
 			return;
 		}
+
+		trackTaskTiming(this._tasks, this._options);
 
 		this._id = setInterval(() => {
 			render(this._tasks, this._options);

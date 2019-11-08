@@ -59,6 +59,12 @@ Default: `false`
 
 Clear the output when all the tasks are executed succesfully.
 
+### showTiming
+
+Type: `boolean`<br>
+Default: `true`
+
+Set to `false` if you don't want tasks to display how long they took (or are taking) to run.
 
 ## Related
 
