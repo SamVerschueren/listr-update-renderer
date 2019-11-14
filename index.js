@@ -16,7 +16,8 @@ const renderHelper = (tasks, options, level) => {
 		if (task.isEnabled()) {
 			const skipped = task.isSkipped() ? ` ${chalk.dim('[skipped]')}` : '';
 
-			output.push(indentString(` ${utils.getSymbol(task, options)} ${task.title}${skipped}`, level, '  '));
+			const out = indentString(` ${utils.getSymbol(task, options)} ${task.title}${skipped}`, level, '  ');
+			output.push(cliTruncate(out, process.stdout.columns));
 
 			if ((task.isPending() || task.isSkipped() || task.hasFailed()) && utils.isDefined(task.output)) {
 				let data = task.output;
