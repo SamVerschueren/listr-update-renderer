@@ -44,8 +44,14 @@ const renderHelper = (tasks, options, level) => {
 	return output.join('\n');
 };
 
+const shouldSuspendUpdateRenderer = tasks => {
+	return tasks.some(task => task.shouldSuspendUpdateRenderer());
+};
+
 const render = (tasks, options) => {
-	logUpdate(renderHelper(tasks, options));
+	if (!shouldSuspendUpdateRenderer(tasks)) {
+		logUpdate(renderHelper(tasks, options));
+	}
 };
 
 class UpdateRenderer {
