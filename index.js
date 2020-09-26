@@ -31,7 +31,11 @@ const renderHelper = (tasks, options, level) => {
 
 				if (utils.isDefined(data)) {
 					const out = indentString(`${figures.arrowRight} ${data}`, level, '  ');
-					output.push(`   ${chalk.gray(cliTruncate(out, process.stdout.columns - 3))}`);
+					if (task.hasFailed()) {
+						output.push(`   ${chalk.red(cliTruncate(out, process.stdout.columns - 3))}`);
+					} else {
+						output.push(`   ${chalk.gray(cliTruncate(out, process.stdout.columns - 3))}`);
+					}
 				}
 			}
 
