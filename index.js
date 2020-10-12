@@ -31,7 +31,7 @@ const renderHelper = (tasks, options, level) => {
 
 				if (utils.isDefined(data)) {
 					const out = indentString(`${figures.arrowRight} ${data}`, level, '  ');
-					output.push(`   ${chalk.gray(cliTruncate(out, process.stdout.columns - 3))}`);
+					output.push(`   ${chalk.gray(cliTruncate(out, options.stream.columns - 3))}`);
 				}
 			}
 
@@ -44,8 +44,8 @@ const renderHelper = (tasks, options, level) => {
 	return output.join('\n');
 };
 
-const render = (tasks, options) => {
-	logUpdate(renderHelper(tasks, options));
+const render = (tasks, logUpdater, options) => {
+	logUpdater(renderHelper(tasks, options));
 };
 
 class UpdateRenderer {
@@ -54,8 +54,10 @@ class UpdateRenderer {
 		this._options = Object.assign({
 			showSubtasks: true,
 			collapse: true,
-			clearOutput: false
+			clearOutput: false,
+			stream: process.stdout
 		}, options);
+		this._logUpdater = logUpdate.create(this._options.stream);
 	}
 
 	render() {
@@ -65,7 +67,7 @@ class UpdateRenderer {
 		}
 
 		this._id = setInterval(() => {
-			render(this._tasks, this._options);
+			render(this._tasks, this._logUpdater, this._options);
 		}, 100);
 	}
 
@@ -75,12 +77,12 @@ class UpdateRenderer {
 			this._id = undefined;
 		}
 
-		render(this._tasks, this._options);
+		render(this._tasks, this._logUpdater, this._options);
 
 		if (this._options.clearOutput && err === undefined) {
-			logUpdate.clear();
+			this._logUpdater.clear();
 		} else {
-			logUpdate.done();
+			this._logUpdater.done();
 		}
 	}
 }
